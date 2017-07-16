@@ -1,15 +1,15 @@
-var app = angular.module("guiaDeSeries", ['ui.router']);
+var app = angular.module("guiaDeSeries", ['ui.router', 'ngMaterial']);
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/home');
 
   $stateProvider
     .state('main', {
       url: '',
       abstract:true,
       templateUrl: '<div ui-view></div>',
-      controller:'guiaDeSeries',
+      controller:'guiaController'
         })
 
     .state( 'main.home',{

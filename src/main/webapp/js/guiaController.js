@@ -1,4 +1,4 @@
-angular.module("guiaDeSeries", ['ngMaterial']).controller('guiaDeSeriesCtrl', function ($scope, $mdDialog, $http, $timeout, $mdSidenav, $log) {
+angular.module("guiaDeSeries").controller('guiaDeSeriesCtrl', function ($scope, $mdDialog, $http, $timeout, $mdSidenav, $log) {
   $scope.toggleLeft = buildDelayedToggler('left');
   $scope.serie  ="";
   $scope.catalogo = [];
