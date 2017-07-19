@@ -1,4 +1,4 @@
-angular.module("guiaDeSeries").controller('guiaDeSeriesCtrl', function ($scope, $mdDialog, $http, $timeout, $mdSidenav, $log) {
+angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, $mdDialog, $http, $timeout, $mdSidenav, $log) {
   $scope.toggleLeft = buildDelayedToggler('left');
   $scope.serie  ="";
   $scope.catalogo = [];
@@ -6,7 +6,7 @@ angular.module("guiaDeSeries").controller('guiaDeSeriesCtrl', function ($scope, 
   $scope.exibicao = [];
   $scope.watchlist = [];
   $scope.nadaEncontrado = false;
-  $scope.sizes = [
+  $scope.episodio = [
   "0",
   "1",
   "2",
@@ -20,6 +20,26 @@ angular.module("guiaDeSeries").controller('guiaDeSeriesCtrl', function ($scope, 
   "10"
   ];
   $scope.episodio = "";
+
+  $scope.getfunction = function(login,senha){
+
+    var url =  "/loginUsuario";
+    var data ={
+      login: login,
+      senha: senha
+    };
+
+    $http.post(url, data).then(function (response) {
+
+      $scope.result = "Sucessful!";
+      $state.go('home');
+      $scope.usuarioLogado = response.data;
+
+    }, function (response) {
+      $scope.result = "Dados inválidos!";
+    });
+
+  };
 
 
   $scope.pesquisarSeries = function(serie) {
@@ -46,27 +66,23 @@ angular.module("guiaDeSeries").controller('guiaDeSeriesCtrl', function ($scope, 
         $scope.nadaEncontrado = false;
       }
     })
+
+
+
   }
 
-  $scope.cadastraUser = function(login, senha){
-
-    var user = {
-      login:login,
-      senha:senha
-    }
-
-    $http.post('/register', user).then(function(response){
+  $scope.cadastrar = function() {
+    var nome = null;
+    var senha = null;
+    var usuarioCadastrado = {"nome": nome, "senha": senha};
+    var promise = $http.post("/register", usuarioCadastrado).then(function(response) {
       $scope.resposta = "Cadastrado!"
       $scope.state.go('main.home')
-    }, function(response){
-      $scope.resposta = "Dados inválidos"
-    })
 
-
-
-  }
-
-
+    }, function error (error) {
+      console.log(error);
+    });
+  };
 
   $scope.adicionarMinhasSeries = function (serie) {
     if ($scope.serieExiste(serie, $scope.minhasSeries)) {

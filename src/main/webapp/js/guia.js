@@ -1,24 +1,29 @@
-var app = angular.module("guiaDeSeries", ['ui.router', 'ngMaterial']);
+const app = angular.module("guiaDeSeries", ['ui.router', 'ngMaterial']);
 
-app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider) {
 
-  $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/login');
 
   $stateProvider
     .state('main', {
       url: '',
-      abstract:true,
-      templateUrl: '<div ui-view></div>',
-      controller:'guiaController'
+      abstract: true,
+      template: '<div ui-view></div>',
+      controller:'guiaDeSeriesCtrl'
         })
 
-    .state( 'main.home',{
-        url: '/home',
-        templateUrl: 'home.html'
+    .state( 'main.login',{
+        url: '/login',
+        templateUrl: 'login.html',
     })
 
+    .state('home', {
+      url:'/home',
+      templateUrl: 'home.html',
+    });
 
 
-    // Utilizando o HTML5 History API
-    $locationProvider.html5Mode(true);
+
+
 });
+
