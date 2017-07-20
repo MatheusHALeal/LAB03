@@ -1,4 +1,4 @@
-angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, $state, $mdDialog, $http, $timeout, $mdSidenav, $log) {
+angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, $state, $mdDialog, $http, $timeout, $mdSidenav, $log, $localStorage) {
   $scope.toggleLeft = buildDelayedToggler('left');
   $scope.serie  ="";
   $scope.catalogo = [];
@@ -22,36 +22,58 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
   $scope.episodio = "";
 
   $scope.register = function(name, password){
+    console.log("register");
     var url = "/register";
     var data = {
-      login: name,
-      senha: password
+      name: name,
+      password: password
     };
 
     $http.post(url, data).then(function (response) {
       $scope.postResultMessage = "Concluído";
-      $state.go('main.home');
+
+     
     }, function (response) {
       $scope.postResultMessage = "Algo deu errado";
+
     });
 
   };
 
-  $scope.login = function(name, password){
+  $scope.login = function(cname, cpassword){
+  $scope.minhasSeries = [];
+  $scope.exibicao = [];
+  $scope.watchlist = [];
+    console.log("login");
     var url = "/getin";
     var data = {
-      login: name,
-      senha: password
+      name: cname,
+      password: cpassword
     };
 
     $http.post(url, data).then(function (response) {
       $scope.postResultMessage = "Olá";
+
+      $scope.usuarioLogado = response.data.id;
+      $scope.seriesDoUsuario();
       $state.go('main.home');
+
+
     }, function (response) {
-      $scope.postResultMessage = ":(";
     });
 
   };
+
+  $scope.seriesDoUsuario = function() {
+    var url = '/getSeries/' + $scope.usuarioLogado;
+
+    $http.get(url).then(function (response) {
+      var seriesPerfil = response.data;
+      console.log(seriesPerfil);
+
+    })
+
+  }
 
   $scope.pesquisarSeries = function(serie) {
     var pesquisa = serie.split(" ");
@@ -63,8 +85,6 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
         resultado += pesquisa[i] + "%20";
       }
     } resultado += "&apikey=93330d3c&type=series";
-
-
 
     $http.get(resultado).then(function(response){
       $scope.catalogo = response.data.Search;
@@ -78,6 +98,13 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
       }
     })
 
+  }
+
+  $scope.pesquisaSeriesDoPerfil = function(series) {
+    $scope.exibicao = series;
+    for (i = 0; i < exibicao.length; i++) {
+      "https://omdbapi.com/?s=" + exibicao[i].getImdbID() + "&apikey=93330d3c&type=series";
+    }
 
 
   }
@@ -91,10 +118,30 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
         $scope.removeDaWatchlist(serie);
       } else {
         $scope.minhasSeries.push(serie);
+        $scope.add(serie);
         alert('"'+serie.Title+'" foi adicionada ao seu perfil')
       }
 
     }
+  }
+
+  $scope.add = function(serie) {
+    console.log($scope.usuarioLogado);
+ 
+    var data = {
+      idUser: $scope.usuarioLogado,
+      imdbID: serie.imdbID,
+      title: serie.Title
+    };
+
+  
+
+    var url = "/save";
+    $http.post(url, data).then(function (response) {
+
+
+    }, function (response) {
+    });
   }
 
   $scope.removeMinhaSerie = function (serie) {

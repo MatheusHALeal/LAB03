@@ -3,6 +3,7 @@ package guia;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,20 +23,31 @@ public class SerieController {
 		this.serieRepository = serieRepository;
 	}
 
-	@RequestMapping(value = "/pesquisa", method = RequestMethod.POST)
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public void postSerie(@RequestBody Serie serie) {
-		if (!serieRepository.exists(serie.getId())) {
-			serieRepository.save(serie);			
+		if (userHaveSerie(serie)) {
+			return;			
+		} else {
+			serieRepository.save(serie);
 		}
-
-		
 	}
 	
-	@RequestMapping(value= "/pesquisa", method = RequestMethod.GET)
-	public List<Serie> getSerie() {
-		return serieRepository.findAll();
-		
-		
+	public boolean userHaveSerie(Serie serie) {
+		List<Serie> series = serieRepository.findAll();
+		for (Serie serie2 : series) {
+			if (serie2.equals(serie)) {
+				return true;
+			}
+		} return false;
 	}
+	
+	
+	
+	
 
+	@RequestMapping(value = "/getSeries/{idUsuario}", method = RequestMethod.GET)
+	public List<Serie> getSeries(@PathVariable Long idUsuario) {
+		return serieRepository.findByidUser(idUsuario);
+	} 
+	
 }

@@ -1,4 +1,4 @@
-const app = angular.module("guiaDeSeries", ['ui.router', 'ngMaterial']);
+const app = angular.module("guiaDeSeries", ['ui.router', 'ngMaterial', 'ngStorage']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
@@ -14,14 +14,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
   .state( 'main.login',{
     url: '/login',
-    templateUrl: 'login.html',
-    controller:'guiaDeSeriesCtrl'
+    templateUrl: 'login.html'
   })
 
   .state('main.home', {
     url: '/home',
-    templateUrl: 'home.html',
-    controller:'guiaDeSeriesCtrl'
+    templateUrl: 'home.html'
   });
 
 

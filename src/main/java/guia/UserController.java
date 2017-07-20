@@ -16,21 +16,19 @@ public class UserController {
 	public UserController(UserRepository usuarioRepository) {
 		this.userRepository = usuarioRepository;
 	}
-	
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public void postUser(@RequestBody User user) {
-		if (userRepository.findByName(user.getName()) == null) {
+	public void register(@RequestBody User user) {
+		if (userRepository.findByName(user.getName()) != null) {
+			throw new RuntimeException();
+		} else {
 			userRepository.save(user);
 			return;
-		} else {
-
-			throw new RuntimeException();
 		}
 	}
-	
+
 	@RequestMapping(value = "/getin", method = RequestMethod.POST)
 	public User login(@RequestBody User user) {
-		
 		if (validation(user.getName(), user.getPassword()) == null) {
 			throw new RuntimeException();
 		} else {
@@ -38,16 +36,16 @@ public class UserController {
 		}
 
 	}
-	
+
 	public User validation(String name, String password) {
 		User user = userRepository.findByName(name);
 		if (user != null) {
 			if (user.getPassword().equals(password)) {
 				return user;
-			} return null;
-		} return user;
+			}
+			return null;
+		}
+		return user;
 	}
-
-
-
+	
 }
