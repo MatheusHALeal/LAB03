@@ -1,11 +1,6 @@
 package guia;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,10 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private UserRepository userRepository;
-	
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	public UserController(UserRepository usuarioRepository) {
@@ -27,22 +18,36 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<User> cadastrar(@RequestBody User usuario) {
-		User usuarioCadastrado = userService.cadastrar(usuario);
-		if (usuario == null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	public void postUser(@RequestBody User user) {
+		if (userRepository.findByName(user.getName()) == null) {
+			userRepository.save(user);
+			return;
+		} else {
+
+			throw new RuntimeException();
 		}
-		return new ResponseEntity<>(usuarioCadastrado, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<User> logar(@RequestBody User usuario) {
-		usuario = userService.logar(usuario);
-		if (usuario == null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	@RequestMapping(value = "/getin", method = RequestMethod.POST)
+	public User login(@RequestBody User user) {
+		
+		if (validation(user.getName(), user.getPassword()) == null) {
+			throw new RuntimeException();
+		} else {
+			return validation(user.getName(), user.getPassword());
 		}
-		return new ResponseEntity<>(usuario, HttpStatus.OK);
+
 	}
+	
+	public User validation(String name, String password) {
+		User user = userRepository.findByName(name);
+		if (user != null) {
+			if (user.getPassword().equals(password)) {
+				return user;
+			} return null;
+		} return user;
+	}
+
 
 
 }

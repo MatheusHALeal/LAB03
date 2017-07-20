@@ -1,4 +1,4 @@
-angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, $mdDialog, $http, $timeout, $mdSidenav, $log) {
+angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, $state, $mdDialog, $http, $timeout, $mdSidenav, $log) {
   $scope.toggleLeft = buildDelayedToggler('left');
   $scope.serie  ="";
   $scope.catalogo = [];
@@ -21,26 +21,37 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
   ];
   $scope.episodio = "";
 
-  $scope.getfunction = function(login,senha){
-
-    var url =  "/loginUsuario";
-    var data ={
-      login: login,
-      senha: senha
+  $scope.register = function(name, password){
+    var url = "/register";
+    var data = {
+      login: name,
+      senha: password
     };
 
     $http.post(url, data).then(function (response) {
-
-      $scope.result = "Sucessful!";
-      $state.go('home');
-      $scope.usuarioLogado = response.data;
-
+      $scope.postResultMessage = "Concluído";
+      $state.go('main.home');
     }, function (response) {
-      $scope.result = "Dados inválidos!";
+      $scope.postResultMessage = "Algo deu errado";
     });
 
   };
 
+  $scope.login = function(name, password){
+    var url = "/getin";
+    var data = {
+      login: name,
+      senha: password
+    };
+
+    $http.post(url, data).then(function (response) {
+      $scope.postResultMessage = "Olá";
+      $state.go('main.home');
+    }, function (response) {
+      $scope.postResultMessage = ":(";
+    });
+
+  };
 
   $scope.pesquisarSeries = function(serie) {
     var pesquisa = serie.split(" ");
@@ -70,19 +81,6 @@ angular.module('guiaDeSeries').controller('guiaDeSeriesCtrl', function ($scope, 
 
 
   }
-
-  $scope.cadastrar = function() {
-    var nome = null;
-    var senha = null;
-    var usuarioCadastrado = {"nome": nome, "senha": senha};
-    var promise = $http.post("/register", usuarioCadastrado).then(function(response) {
-      $scope.resposta = "Cadastrado!"
-      $scope.state.go('main.home')
-
-    }, function error (error) {
-      console.log(error);
-    });
-  };
 
   $scope.adicionarMinhasSeries = function (serie) {
     if ($scope.serieExiste(serie, $scope.minhasSeries)) {
