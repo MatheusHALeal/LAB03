@@ -19,7 +19,7 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public void register(@RequestBody User user) {
-		if (userRepository.findByName(user.getName()) != null) {
+		if (userRepository.findByEmail(user.getEmail()) != null) {
 			throw new RuntimeException();
 		} else {
 			userRepository.save(user);
@@ -29,16 +29,16 @@ public class UserController {
 
 	@RequestMapping(value = "/getin", method = RequestMethod.POST)
 	public User login(@RequestBody User user) {
-		if (validation(user.getName(), user.getPassword()) == null) {
+		if (validation(user.getEmail(), user.getPassword()) == null) {
 			throw new RuntimeException();
 		} else {
-			return validation(user.getName(), user.getPassword());
+			return validation(user.getEmail(), user.getPassword());
 		}
 
 	}
 
-	public User validation(String name, String password) {
-		User user = userRepository.findByName(name);
+	public User validation(String email, String password) {
+		User user = userRepository.findByEmail(email);
 		if (user != null) {
 			if (user.getPassword().equals(password)) {
 				return user;

@@ -10,6 +10,7 @@
                   md-whiteframe="4">
                   <md-toolbar class="md-theme _md _md-toolbar-transitions">
                      <h1 class="md-toolbar-tools">Guia de Séries</h1>
+
                   </md-toolbar>
                   <md-content layout-padding ng-controller="LeftCtrl">
                      <div class="input-group">
@@ -19,6 +20,7 @@
                         </span>
                      </div>
                   </md-content>
+                  <md-button class="md-raised md-warn" ng-click="logout()">Sair</md-button>
                </md-sidenav>
             </section>
          </div >
@@ -59,7 +61,8 @@
             </md-content>
 
             <md-content>
-               <md-tab label="perfil">
+
+               <md-tab label="perfil" >
                   <div flex-xs flex-gt-xs="45"  class="col-sm-3 col-md-6 col-lg-4" ng-repeat="serie in minhasSeries">
                      <md-card  id="box">
                         <md-card-header>
@@ -72,7 +75,7 @@
                         </md-card-header>
                         <img ng-src="{{serie.Poster}}" class="md-card-image" ng-click="verInfo($event, serie)" >
                         <md-card-actions layout="row" layout-align="start center">
-                           <md-button id="myBtn2"  class="waves-effect waves-light btn" ng-click="removeMinhaSerie(serie, minhasSeries)" >Remover</md-button>
+                           <md-button id="myBtn2"  class="waves-effect waves-light btn" ng-click="removeMinhaSerie(serie)" >Remover</md-button>
                         </md-card-actions>
                         <md-card-content>
                            <div>

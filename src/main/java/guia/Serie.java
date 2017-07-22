@@ -22,6 +22,17 @@ public class Serie {
     
     @Column(name="imdbID", nullable=false)
     private String imdbID;
+    
+   @Column(name="inWatchlist", nullable=false)
+   private boolean inWatchlist;
+   
+	public boolean isInWatchlist() {
+	return inWatchlist;
+}
+
+public void setInWatchlist(boolean inWatchlist) {
+	this.inWatchlist = inWatchlist;
+}
 
 	public Long getId() {
 		return id;
